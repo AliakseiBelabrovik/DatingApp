@@ -15,6 +15,9 @@ builder.Services.AddDbContext<DataContext>(opt =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//CORS 
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,7 +26,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("http://localhost:4200")
+);
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

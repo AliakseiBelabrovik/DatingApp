@@ -1,0 +1,7 @@
+<h1>{{title}}</h1>
+<ul *ngIf="users && users.length > 0">
+    <li *ngFor="let user of users">
+        {{ user.getId() }} - {{ user.getUserName() }}
+    </li>
+</ul>
+<router-outlet></router-outlet>
