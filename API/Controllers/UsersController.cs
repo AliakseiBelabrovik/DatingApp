@@ -1,33 +1,34 @@
 ﻿using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/[controller]")] //means, the route is api + / + take the first word from the class name
-// => /api/users
-public class UsersController : ControllerBase
+[Authorize] //-> will require authorization for each of the endpoints in this controller
+public class UsersController : BaseApiController
 {
-    private DataContext Context { get; }
+    private DataContext _context { get; }
 
     public UsersController(DataContext context)
     {
-        Context = context;
+        _context = context;
     }
 
     //Task is a asynchronous result
-    [HttpGet]
+    [AllowAnonymous] //-> will allow to reach endpoints also for anonymous clients
+    [HttpGet] //api/users/
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
-        return await Context.Users.ToListAsync();
+        return await _context.Users.ToListAsync();
     }
 
-    [HttpGet("{id}")] //api/users/2
+
+    [HttpGet("{id}")] // api/users/2
     public async Task<ActionResult<AppUser>> GetUser(int id)
     {
-        return await this.Context.Users.FindAsync(id);
+        return await this._context.Users.FindAsync(id);
     }
 }
 
