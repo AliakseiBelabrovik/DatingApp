@@ -30,5 +30,15 @@ public class UsersController : BaseApiController
     {
         return await this._context.Users.FindAsync(id);
     }
+
+    [HttpDelete("{id}")] // api/users/2
+    public async Task<ActionResult<AppUser>> DeleteUser(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null) return BadRequest("No user found");
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+        return user;
+    }
 }
 

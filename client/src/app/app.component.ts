@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AppUserDTO, IAppUser } from './AppUserDTO';
-import { first } from 'rxjs';
+import { AppUserDTO } from './dtos/AppUserDTO';
+import { IAppUser } from './dtos/interfaces/app-user.interface';
+import { AccountService } from './services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -10,29 +10,19 @@ import { first } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   public title: string = 'My App';
-  public users: any[] = [];
 
-  constructor(private http: HttpClient) { }
+
+  constructor(private accountService: AccountService) { }
 
   public ngOnInit(): void {
-    this.http.get<IAppUser[]>("https://localhost:5006/api/users").pipe(first()).subscribe({
-      next: users => {
-        if (users) { this.users = users.map(u => new AppUserDTO(u.id, u.userName)); }
-      },
-      error: err => console.log(err),
-      complete: () => console.log("COMPLETE")
-    }
-
-
-
-
-      // users => {
-      //   if (users) { this.users = users.map(u => new AppUserDTO(u.id, u.username)); }
-      // }
-
-    )
+    this.setCurrentUser();
   }
 
-
+  //on app start, check if we have user in localStorage -> if yes, set the current user
+  private setCurrentUser(): void {
+    const userString = localStorage.getItem('user');
+    if (!userString) return;
+    const user: IAppUser = (JSON.parse(userString) as IAppUser);
+    this.accountService.setCurrentUser(new AppUserDTO(user.id, user.userName, user.token));
+  }
 }
-
