@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../../services/account.service';
 import { first } from 'rxjs';
 import { AppUserDTO } from '../../dtos/AppUserDTO';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -17,7 +19,7 @@ export class NavComponent implements OnInit {
   public model: { username: string; password: string } = { username: '', password: '' };
   public loggedIn: boolean = false;
 
-  constructor(public accountService: AccountService) { }
+  constructor(public accountService: AccountService, private router: Router, private toastrService: ToastrService) { }
 
   public ngOnInit(): void {
 
@@ -32,15 +34,14 @@ export class NavComponent implements OnInit {
 
   public login(): void {
     this.accountService.login(this.model).pipe(first()).subscribe({
-      next: (response: AppUserDTO) => {
-        console.log(response);
-      },
-      error: err => console.error(err),
-      complete: () => console.log("LOGIN COMPLETE")
+      next: () => this.router.navigateByUrl('/members'),
+      error: err => this.toastrService.error(err.error),
+      complete: () => this.model = { username: '', password: '' }
     });
   }
 
   public logout(): void {
     this.accountService.logout();
+    this.router.navigateByUrl('/');
   }
 }
