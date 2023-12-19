@@ -35,7 +35,6 @@ export class NavComponent implements OnInit {
   public login(): void {
     this.accountService.login(this.model).pipe(first()).subscribe({
       next: () => this.router.navigateByUrl('/members'),
-      error: err => this.toastrService.error(err.error),
       complete: () => this.model = { username: '', password: '' }
     });
   }
