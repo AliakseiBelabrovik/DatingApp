@@ -20,6 +20,9 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ITokenService, TokenService>(); //we need the token service to create the token, no more
         //or add signleton -> service created as soon as the app starts and lives the whole time (e.g., caching service)
 
+        services.AddScoped<IUserRepository, UserRepository>(); //will make user repository injectable
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //anmeldung von auto mapper
+
         return services;
     }
 

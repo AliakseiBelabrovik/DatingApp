@@ -1,4 +1,6 @@
 using API;
+using API.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,5 +37,19 @@ app.UseAuthentication(); //first authenticate -> check if you have a valid token
 app.UseAuthorization(); //tells what are you allowed to do, when you have the valid token
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope(); //gives access to all services inside of program.cs
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(context);
+}
+catch (Exception ex)
+{
+    var logger = services.GetService<ILogger<Program>>();
+    logger?.LogError(ex, "An error occurred during migration");
+}
 
 app.Run();
