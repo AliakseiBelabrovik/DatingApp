@@ -19,6 +19,8 @@ import { TestErrorComponent } from './component/errors/test-error.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { NotFoundComponent } from './component/errors/not-found/not-found.component';
 import { ServerErrorComponent } from './component/errors/server-error/server-error.component';
+import { MemberCardComponent } from './component/members/member-card/member-card.component';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,7 @@ import { ServerErrorComponent } from './component/errors/server-error/server-err
     RegisterComponent,
     ListsComponent,
     MemberListComponent,
-    MemberDetailComponent,
+    MemberCardComponent,
     MessagesComponent,
     TestErrorComponent,
     NotFoundComponent,
@@ -42,8 +44,12 @@ import { ServerErrorComponent } from './component/errors/server-error/server-err
     FormsModule,
     SharedModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }], //multi true to tell that we 
-  //want just add our interceptor to angular interceptor, and not overwrite them
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, //multi true to tell that we 
+    //want just add our interceptor to angular interceptor, and not overwrite them
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+  ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

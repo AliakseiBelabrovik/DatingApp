@@ -4,12 +4,14 @@ import { AppUserDTO } from '../dtos/AppUserDTO';
 import { BehaviorSubject, Observable, first, map } from 'rxjs';
 import { IAppUser } from '../dtos/interfaces/app-user.interface';
 import { IRegisterUser } from '../dtos/interfaces/register-user.interface';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  protected baseUrl: string = 'https://localhost:5006/api/account';
+  protected baseUrl: string = `${environment.apiUrl}/account`;
   private currentUserSource: BehaviorSubject<AppUserDTO | null> = new BehaviorSubject<AppUserDTO | null>(null);
   public currentUser$ = this.currentUserSource.asObservable();
 

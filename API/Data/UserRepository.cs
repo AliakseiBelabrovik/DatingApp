@@ -53,7 +53,6 @@ public class UserRepository : IUserRepository
             .Where(u => u.UserName == userName)
             .ProjectTo<MemberDTO>(_mapper.ConfigurationProvider) //we select only columns which are needed for memberDTO
             .SingleOrDefaultAsync();
-
     }
 
     public async Task<IEnumerable<MemberDTO>> GetMembersAsync()
